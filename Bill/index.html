@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vishnu Arun Ice Cream Parlour</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <h1>Welcome to Vishnu Arun Ice Cream Parlour 🍨</h1>
+            <p class="tagline">Your favorite spot in Gingee for delicious Arun Ice Creams, Arokya milk, and fresh curd.</p>
+            <p class="description">Cool down with a scoop of happiness — taste the chill, love the flavour!</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <button class="nav-btn active" onclick="showSection('menu')">Menu</button>
+            <button class="nav-btn" onclick="showSection('manage')">Manage Menu</button>
+            <button class="nav-btn" onclick="showSection('sales')">Sales Report</button>
+            <button class="nav-btn" onclick="showSection('contact')">Contact</button>
+            <button class="nav-btn cart-btn" onclick="toggleCart()">
+                Cart <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Menu Section -->
+            <section id="menu-section" class="section active">
+                <h2>🍧 Our Menu</h2>
+                
+                <!-- Arun Ice Cream Specials -->
+                <div class="category-section">
+                    <h3>🍦 Arun Ice Cream Specials</h3>
+                    <div class="menu-grid" id="icecream-menu">
+                        <!-- Menu items will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <!-- Arokya Dairy Products -->
+                <div class="category-section">
+                    <h3>🥛 Arokya Dairy Products</h3>
+                    <div class="menu-grid" id="dairy-menu">
+                        <!-- Menu items will be dynamically loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Manage Menu Section -->
+            <section id="manage-section" class="section">
+                <h2>Manage Menu</h2>
+                
+                <!-- Add New Item Form -->
+                <div class="crud-form">
+                    <h3 id="form-title">Add New Menu Item</h3>
+                    <form id="menu-form" onsubmit="handleFormSubmit(event)">
+                        <input type="hidden" id="item-id" value="">
+                        <div class="form-group">
+                            <label for="item-name">Product Name</label>
+                            <input type="text" id="item-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-description">Description</label>
+                            <textarea id="item-description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-price">Price (₹)</label>
+                            <input type="number" id="item-price" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-category">Category</label>
+                            <select id="item-category" required>
+                                <option value="icecream">Arun Ice Cream Specials</option>
+                                <option value="dairy">Arokya Dairy Products</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-image">Image URL</label>
+                            <input type="url" id="item-image" placeholder="Enter image URL or leave empty for default">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save Item</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Sales Report Section -->
+            <section id="sales-section" class="section">
+                <h2>Monthly Sales Report</h2>
+                <div class="sales-controls">
+                    <div class="form-group">
+                        <label for="sales-month">Select Month</label>
+                        <input type="month" id="sales-month" onchange="loadSalesReport()">
+                    </div>
+                </div>
+                <div class="sales-summary">
+                    <div class="summary-card">
+                        <h3>Total Sales</h3>
+                        <p class="amount" id="totalSales">₹0.00</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Total Transactions</h3>
+                        <p class="amount" id="totalTransactions">0</p>
+                    </div>
+                </div>
+                <div class="transactions-list" id="transactionsList">
+                    <!-- Transactions will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact-section" class="section">
+                <h2>📍 Contact & Location</h2>
+                <div class="contact-card">
+                    <h3>Vishnu Arun Ice Cream Parlour</h3>
+                    <p><strong>📍 Address:</strong> Main Road, Gingee, Tamil Nadu – 604202</p>
+                    <p><strong>📞 Phone:</strong> +91 98765 43210</p>
+                    <p><strong>🕒 Timings:</strong> 10:00 AM – 10:00 PM</p>
+                    <p><strong>📧 Email:</strong> vishnuarunparlour@gmail.com</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Shopping Cart Sidebar -->
+    <aside class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button class="close-btn" onclick="toggleCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be loaded here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Total: ₹<span id="cartTotal">0.00</span></strong>
+            </div>
+            <div class="cart-actions">
+                <button class="btn btn-primary" onclick="openPaymentModal()">Pay Now</button>
+                <button class="btn btn-secondary" onclick="printBill()">Print Bill</button>
+                <button class="btn btn-danger" onclick="clearCart()">Clear Cart</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Cart Overlay -->
+    <div class="overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Payment</h2>
+                <button class="close-btn" onclick="closePaymentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="bill-summary" id="billSummary">
+                    <!-- Bill summary will be loaded here -->
+                </div>
+                <div class="qr-code-section">
+                    <h3>Scan to Pay</h3>
+                    <img src="https://via.placeholder.com/300x300/4CAF50/FFFFFF?text=QR+Code" alt="QR Code" class="qr-code">
+                    <p>Scan the QR code to complete your payment</p>
+                </div>
+                <div class="payment-actions">
+                    <button class="btn btn-success" onclick="completePayment()">Confirm Payment</button>
+                    <button class="btn btn-secondary" onclick="closePaymentModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
